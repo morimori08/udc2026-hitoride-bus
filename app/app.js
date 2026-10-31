@@ -592,8 +592,8 @@ async function runTown() {
   S.stops.forEach((s, i) => { if (!byName.has(s.name) || byName.get(s.name) < score[i]) byName.set(s.name, score[i]); });
   const ranked = [...byName.entries()].sort((a, b) => a[1] - b[1]);
   $('town-summary').innerHTML = `
-    <div class="score"><div class="big">${zero}<small> / ${N} のバス停</small></div>
-    <p>…は、そこを最寄りにする子どもが「ひとりで行けて帰れる行き先」がゼロ（${P.date} ${s2t(P.depart)}発・${P.budget / 60}分以内・門限${s2t(P.curfew)}・乗りかえなし）。中央値は${median}か所。</p></div>
+    <div class="score"><div class="big zero">${zero}<small> / ${N} のバス停で、ひとりで行けて帰れる行き先がゼロ</small></div>
+    <p>その場所に住む子どもの場合（${P.date} ${s2t(P.depart)}発・${P.budget / 60}分以内・門限${s2t(P.curfew)}・乗りかえなし）。全バス停の中央値は${median}か所。</p></div>
     <ul class="legend"><li><i class="dot" style="background:#c2410c"></i>0か所</li><li><i class="dot" style="background:#f59e0b"></i>少ない</li><li><i class="dot" style="background:#84cc16"></i>中くらい</li><li><i class="dot" style="background:#15803d"></i>多い（最大${max}か所）</li></ul>
     <h3>行き先が少ないバス停（下位15）</h3>
     <table class="town-table">${ranked.slice(0, 15).map(([n, v]) => `<tr><td>${esc(n)}</td><td>${v}</td></tr>`).join('')}</table>

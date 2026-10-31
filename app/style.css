@@ -63,6 +63,7 @@ summary { cursor: pointer; font-size: 13px; color: var(--mute); }
 .feed-list input { width: auto; }
 .score { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
 .score .big { font-size: 36px; font-weight: 800; color: var(--ok); line-height: 1.1; }
+.score .big.zero { color: #c2410c; }
 .score .big small { font-size: 15px; color: var(--ink); font-weight: 600; }
 .score p { margin: 4px 0 0; font-size: 13px; color: var(--mute); }
 .legend { list-style: none; padding: 0; margin: 10px 0; font-size: 13px; }
