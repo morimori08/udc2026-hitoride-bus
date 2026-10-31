@@ -467,6 +467,8 @@ async function run() {
   const R = compute(homeStops, P, act);
   S.result = R;
   drawResult(R);
+  const shown = [[S.home.lat, S.home.lon], ...S.stops.filter((_, i) => R.status[i] >= 1).map((s) => [s.lat, s.lon])];
+  map.fitBounds(L.latLngBounds(shown), { padding: [30, 30], maxZoom: 15 });
   $('step-result').hidden = false;
   const activeTrips = act.reduce((a, b) => a + b, 0);
   $('score').innerHTML = activeTrips === 0
