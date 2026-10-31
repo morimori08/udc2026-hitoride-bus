@@ -549,10 +549,10 @@ function showRaw() {
   let html = '<p>このカードは、バス会社が公開している <b>stop_times.txt</b>（どの便が、どのバス停を、何時に通るか）の次の行から作られています。色のついた行が、乗る所と降りる所です。</p>';
   for (const o of rideLegs) {
     const tr = S.trips[o.ti];
-    html += `<table><tr><th>trip_id</th><th>stop_sequence</th><th>stop_id</th><th>（バス停名）</th><th>departure_time</th></tr>`;
+    html += `<p class="hint">この便の trip_id：${esc(tr.tripId)}</p><table><tr><th>stop_sequence</th><th>stop_id</th><th>（バス停名）</th><th>departure_time</th></tr>`;
     for (let k = Math.max(0, o.from - 1); k <= Math.min(tr.stops.length - 1, o.to + 1); k++) {
       const hl = k === o.from || k === o.to ? ' class="hl"' : '';
-      html += `<tr${hl}><td>${esc(tr.tripId)}</td><td>${tr.seq[k]}</td><td>${esc(S.stops[tr.stops[k]].id)}</td><td>${esc(S.stops[tr.stops[k]].name)}</td><td>${s2t(tr.dep[k])}</td></tr>`;
+      html += `<tr${hl}><td>${tr.seq[k]}</td><td>${esc(S.stops[tr.stops[k]].id)}</td><td>${esc(S.stops[tr.stops[k]].name)}</td><td>${s2t(tr.dep[k])}</td></tr>`;
     }
     html += '</table><br>';
   }
