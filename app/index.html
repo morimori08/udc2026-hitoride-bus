@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ひとりで、バスに乗れた。</title>
+<meta name="description" content="子どもが「ひとりで行けて、門限までに帰ってこられる」範囲を、公共交通オープンデータ（GTFS）から地図に描くアプリ。">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>ひとりで、バスに乗れた。</h1>
+  <p class="sub">子どもが<b>ひとりで行けて、門限までに帰ってこられる</b>場所を、バスのオープンデータから見つける地図</p>
+  <nav class="tabs">
+    <button class="tab on" data-mode="kid">こどもモード</button>
+    <button class="tab" data-mode="town">まちモード（おとな向け）</button>
+    <button class="tab" data-mode="about">このアプリについて</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <aside class="panel" id="panel">
+    <section class="step" id="step-data">
+      <h2><span class="num">1</span>バスのデータをえらぶ</h2>
+      <button id="preset-hachinohe" class="primary">八戸圏のバスをまとめて読み込む</button>
+      <details>
+        <summary>ほかの地域をえらぶ（全国のGTFSデータ）</summary>
+        <label>都道府県 <select id="pref"></select></label>
+        <div id="feed-list" class="feed-list"></div>
+        <button id="load-selected">えらんだデータを読み込む</button>
+      </details>
+      <p id="data-status" class="status">まだ読み込んでいません。</p>
+    </section>
+
+    <section class="step" id="step-home">
+      <h2><span class="num">2</span>家のあたりを地図でタップ</h2>
+      <p class="hint">場所はこの端末の中だけで計算します。どこにも送信しません。</p>
+      <p id="home-status" class="status">未設定</p>
+    </section>
+
+    <section class="step" id="step-cond">
+      <h2><span class="num">3</span>おでかけの条件</h2>
+      <div class="grid2">
+        <label>日にち <input type="date" id="p-date"></label>
+        <label>家を出る時刻 <input type="time" id="p-depart" value="10:00"></label>
+        <label>行きにかけていい時間 <select id="p-budget">
+          <option value="30">30分</option><option value="45">45分</option>
+          <option value="60" selected>60分</option><option value="90">90分</option></select></label>
+        <label>バス停まで歩けるきょり <select id="p-walk">
+          <option value="250">250m（約4分）</option><option value="400" selected>400m（約7分）</option>
+          <option value="600">600m（約10分）</option></select></label>
+        <label>むこうで過ごす時間 <select id="p-stay">
+          <option value="30">30分</option><option value="60">1時間</option>
+          <option value="90" selected>1時間30分</option><option value="120">2時間</option></select></label>
+        <label>門限（家に着く時刻） <input type="time" id="p-curfew" value="17:00"></label>
+      </div>
+      <label class="check"><input type="checkbox" id="p-transfer"> 乗りかえ1回までOK（はじめは「乗りかえなし」がおすすめ）</label>
+      <button id="run" class="primary" disabled>しらべる</button>
+    </section>
+
+    <section class="step" id="step-result" hidden>
+      <h2><span class="num">4</span>けっか</h2>
+      <div id="score" class="score"></div>
+      <ul class="legend">
+        <li><i class="dot ok"></i>行けて、門限までに帰れる</li>
+        <li><i class="dot oneway"></i>行けるけど、帰りのバスがない</li>
+        <li><i class="dot home"></i>家から歩けるバス停</li>
+      </ul>
+      <h3>ひとりで行ける場所</h3>
+      <p class="hint">バス停をタップすると「おでかけカード」が作れます。</p>
+      <ul id="poi-list" class="poi-list"></ul>
+    </section>
+
+    <section class="step" id="step-town" hidden>
+      <h2>まちモード：バス停ごとの「ひとりで行ける場所の数」</h2>
+      <p>すべてのバス停の位置に「家」があるとみなして、こどもモードと同じ条件（乗りかえなし）で、行けて門限までに帰れる行き先のバス停の数を数えます。路線・ダイヤの見直しや、通学・放課後の移動を考える材料になります。</p>
+      <button id="run-town" class="primary" disabled>まち全体を計算する</button>
+      <div id="town-summary"></div>
+    </section>
+
+    <section class="step" id="step-about" hidden>
+      <h2>このアプリについて</h2>
+      <p>地方では、子どもの移動の多くを家族の車の送迎が担っています。バスはあっても、子どもも親も「どこまで行けて、ちゃんと帰ってこられるのか」が分かりません。時刻表は路線ごとに分かれていて、「行き」と「帰り」を組み合わせて読むのは大人でも大変です。</p>
+      <p>このアプリは、バス事業者が公開している標準的なバス情報フォーマット（GTFS-JP）を読み込み、<b>行きの便</b>と<b>門限までに家へ戻る帰りの便</b>の両方がある場所だけを「ひとりで行ける場所」として地図に示します。</p>
+      <h3>使っているデータ</h3>
+      <ul id="credit-list" class="credits"></ul>
+      <ul class="credits">
+        <li>GTFSデータリポジトリ（gtfs-data.jp）API</li>
+        <li>背景地図：地理院タイル（国土地理院）</li>
+        <li>行き先の施設：© OpenStreetMap contributors（ODbL）</li>
+      </ul>
+      <h3>注意</h3>
+      <p class="hint">ダイヤは変わることがあります。運休・遅れ・運賃は、おでかけ前に事業者の案内で確かめてください。このアプリは計画の手助けであり、安全を保証するものではありません。</p>
+    </section>
+  </aside>
+
+  <div id="map" class="map"></div>
+</main>
+
+<div id="card-modal" class="modal" hidden>
+  <div class="modal-body">
+    <button class="close" id="card-close" aria-label="閉じる">×</button>
+    <div id="card" class="card"></div>
+    <div class="card-actions">
+      <button id="card-print" class="primary">カードを印刷する</button>
+      <button id="card-data">このカードの元データを見る</button>
+    </div>
+    <div id="card-raw" class="raw" hidden></div>
+  </div>
+</div>
+
+<div id="busy" class="busy" hidden><div class="busy-box"><div class="spin"></div><p id="busy-msg">読み込み中…</p></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
