@@ -6,7 +6,7 @@
 <title>ひとりで、バスに乗れた。</title>
 <meta name="description" content="子どもが「ひとりで行けて、門限までに帰ってこられる」範囲を、公共交通オープンデータ（GTFS）から地図に描くアプリ。">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <header class="top">
@@ -93,6 +93,8 @@
       </ul>
       <h3>注意</h3>
       <p class="hint">ダイヤは変わることがあります。運休・遅れ・運賃は、おでかけ前に事業者の案内で確かめてください。このアプリは計画の手助けであり、安全を保証するものではありません。</p>
+      <p class="hint">「八戸圏のバス」には南部バスが入っていません。南部バスの時刻データは登録制で、第三者への提供が規約で禁じられており、このアプリでは使えないためです。南部バスだけが走る地区では、行ける場所が実際より少なく表示されます。</p>
+      <p class="hint">GTFSデータリポジトリの運行中のデータ580件のうち534件で、読み込みから計算まで動くことを確かめています（2026年11月1日）。</p>
     </section>
   </aside>
 
@@ -115,7 +117,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="core.js?v=6"></script>
-<script src="app.js?v=8"></script>
+<script src="core.js?v=7"></script>
+<script src="app.js?v=11"></script>
 </body>
 </html>

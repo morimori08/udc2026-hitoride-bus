@@ -10,10 +10,12 @@ const BUNDLE_DIR = path.join(__dirname, '..', 'app', 'data', 'feeds');
 
 function filesFromZip(buf) {
   const files = {};
-  for (const [name, data] of Object.entries(unzip(buf))) {
-    if (!data || name.startsWith('__MACOSX/')) continue;
-    const base = name.split('/').pop();
-    if (core.GTFS_FILES.includes(base) && !(base in files)) files[base] = core.decodeText(data);
+  const entries = Object.entries(unzip(buf)).filter(([name, data]) => data && !name.startsWith('__MACOSX/'));
+  // .txt を優先し、無いときだけ .csv を使う
+  entries.sort(([a], [b]) => Number(/\.csv$/i.test(a)) - Number(/\.csv$/i.test(b)));
+  for (const [name, data] of entries) {
+    const std = core.gtfsName(name);
+    if (std && !(std in files)) files[std] = core.decodeText(data);
   }
   return files;
 }

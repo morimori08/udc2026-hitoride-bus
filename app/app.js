@@ -71,10 +71,13 @@ function metaOf(c) {
 
 async function zipToFiles(buf) {
   const zip = await JSZip.loadAsync(buf);
+  const entries = Object.values(zip.files).filter((f) => !f.dir && !f.name.startsWith('__MACOSX/'));
+  // .txt を優先し、無いときだけ .csv を使う
+  entries.sort((a, b) => Number(/\.csv$/i.test(a.name)) - Number(/\.csv$/i.test(b.name)));
   const files = {};
-  for (const name of H.GTFS_FILES) {
-    const f = zip.file(new RegExp('(^|/)' + name.replace('.', '\\.') + '$')).find((x) => !x.name.startsWith('__MACOSX/'));
-    if (f) files[name] = H.decodeText(await f.async('uint8array'));
+  for (const f of entries) {
+    const std = H.gtfsName(f.name);
+    if (std && !(std in files)) files[std] = H.decodeText(await f.async('uint8array'));
   }
   return files;
 }
@@ -214,8 +217,11 @@ async function run() {
   map.fitBounds(L.latLngBounds(shown), { padding: [30, 30], maxZoom: 15 });
   $('step-result').hidden = false;
   const activeTrips = act.reduce((a, b) => a + b, 0);
+  const next = activeTrips === 0 ? H.nextServiceDate(NET, P.date, 120) : null;
   $('score').innerHTML = activeTrips === 0
-    ? `<p>この日はバスが走っていないか、データの有効期間外です。日にちを変えてください。</p>`
+    ? (next
+      ? `<p>${esc(P.date)}はバスが走っていません。次に走るのは <b>${esc(next)}</b>（${'月火水木金土日'[H.weekdayOf(next)]}）です。日にちを変えてしらべてください。</p>`
+      : `<p>このデータには、${esc(P.date)}から120日先までに走る日が入っていません。データの有効期限が切れている可能性があります。</p>`)
     : `<div class="big">${R.ok}<small> か所のバス停へ、ひとりで行けて帰れる</small></div>
        <p>行けるけど帰りのバスがないバス停：${R.oneway}か所</p>
        <p>${P.date}　${s2t(P.depart)}に出発・${P.budget / 60}分以内・門限${s2t(P.curfew)}・${P.transfers ? '乗りかえ1回まで' : '乗りかえなし'}</p>`;
@@ -224,6 +230,7 @@ async function run() {
   list.innerHTML = '<li class="hint">行き先の施設を探しています…</li>';
   const pois = await loadPOIs();
   const reach = H.poiReach(NET, R, pois, S.home);
+  S.reach = reach;
   poiLayer.clearLayers();
   reach.forEach((p) => {
     L.circleMarker([p.lat, p.lon], { radius: 7, color: '#7c3aed', weight: 2, fillColor: '#fff', fillOpacity: 1 })
@@ -447,5 +454,30 @@ function init() {
   $('card-print').addEventListener('click', () => window.print());
   $('card-data').addEventListener('click', showRaw);
   document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  runDemo(new URLSearchParams(location.search));
+}
+
+// ?demo=1 で、八戸圏の読み込みから計算までを自動で行う（審査員がリンクを開くだけで結果を見られるように）。
+// &home=緯度,経度 &mode=town &card=施設名の一部 &raw=1 で、見せる画面を選べる
+async function runDemo(q) {
+  if (['light', 'dark'].includes(q.get('theme'))) document.documentElement.dataset.theme = q.get('theme');
+  if (!q.has('demo')) return;
+  POI_FILE = 'data/pois_hachinohe.json';
+  await loadFeeds(PRESET_HACHINOHE, true);
+  if (!NET) return;
+  const [lat, lon] = (q.get('home') || '40.5003,141.4627').split(',').map(Number);
+  if (q.get('mode') === 'town') {
+    setMode('town');
+    await runTown();
+    return;
+  }
+  setHome(lat, lon);
+  await run();
+  if (!q.has('card')) return;
+  const p = (S.reach || []).find((x) => x.name.includes(q.get('card')));
+  if (!p) return;
+  map.setView([p.lat, p.lon], 15);
+  openCard(p.stop, p);
+  if (q.has('raw')) { showRaw(); $('card-raw').scrollIntoView({ block: 'start' }); }
 }
 init();

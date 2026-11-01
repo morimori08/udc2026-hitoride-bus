@@ -34,6 +34,15 @@
   }
   function walkSec(m) { return Math.round((m / KID_WALK_M_PER_MIN) * 60); }
 
+  // zip 内のファイル名を GTFS の標準名に揃える。拡張子が .csv のフィード（つくバス等）や大文字混じりも受ける
+  function gtfsName(path) {
+    const base = String(path).split('/').pop().toLowerCase();
+    const m = base.match(/^(.+)\.(txt|csv)$/);
+    if (!m) return null;
+    const std = m[1] + '.txt';
+    return GTFS_FILES.includes(std) ? std : null;
+  }
+
   // GTFS-JP の規定は UTF-8 だが、Shift_JIS のまま公開されたファイルも読めるようにする
   function decodeText(bytes) {
     try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
@@ -290,6 +299,16 @@
     return (new Date(Date.UTC(y, m - 1, d)).getUTCDay() + 6) % 7; // 0=月曜
   }
 
+  // dateStr の翌日から days 日先までで、便が1本以上走る最初の日（無ければ null）
+  function nextServiceDate(net, dateStr, days) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    for (let i = 1; i <= days; i++) {
+      const t = new Date(Date.UTC(y, m - 1, d + i)).toISOString().slice(0, 10);
+      if (activeMask(net, t).some((v) => v)) return t;
+    }
+    return null;
+  }
+
   function activeMask(net, dateStr) {
     const wd = weekdayOf(dateStr);
     const ymd = dateStr.replaceAll('-', '');
@@ -461,8 +480,8 @@
 
   return {
     KID_WALK_M_PER_MIN, NEAR_M, RETURN_M, TRANSFER_BUFFER, GTFS_FILES, POI_RANK,
-    t2s, s2t, hm2s, dist, walkSec, decodeText, parseCSV,
-    createNetwork, addFeed, finalize, stopsWithin, nearStops, weekdayOf, activeMask,
+    t2s, s2t, hm2s, dist, walkSec, gtfsName, decodeText, parseCSV,
+    createNetwork, addFeed, finalize, stopsWithin, nearStops, weekdayOf, activeMask, nextServiceDate,
     compute, returnOptions, legsOf, townScore, poiReach,
   };
 }));

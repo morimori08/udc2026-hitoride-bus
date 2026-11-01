@@ -1,0 +1,90 @@
+{
+  "source": "国土数値情報 500mメッシュ別将来推計人口（R6国政局推計）青森県 500m_mesh_2024_02, PTA_2025（0〜14歳）と PT02_2025+PT03_2025（5〜14歳）",
+  "conditions": "10:00発・行き60分以内・徒歩400m・滞在90分・門限17:00",
+  "feeds": [
+    "八戸市営バス",
+    "八戸市南郷コミュニティバス",
+    "階上町コミュニティバス",
+    "十和田観光電鉄（一般路線）"
+  ],
+  "results": [
+    {
+      "date": "2026-11-07",
+      "transfers": 0,
+      "meshesWithKids": 739,
+      "zeroMeshes": 447,
+      "kids": 23496,
+      "zeroKids": 6643,
+      "zeroPct": 28.3,
+      "school": 17138,
+      "zeroSchool": 4912,
+      "zeroSchoolPct": 28.7,
+      "noStopKids": 5132,
+      "stopZeroKids": 1511,
+      "byTown": {
+        "八戸市": {
+          "kids": 22410,
+          "zeroKids": 6077,
+          "zeroPct": 27.1
+        },
+        "階上町": {
+          "kids": 1086,
+          "zeroKids": 566,
+          "zeroPct": 52.1
+        }
+      }
+    },
+    {
+      "date": "2026-11-07",
+      "transfers": 1,
+      "meshesWithKids": 739,
+      "zeroMeshes": 447,
+      "kids": 23496,
+      "zeroKids": 6643,
+      "zeroPct": 28.3,
+      "school": 17138,
+      "zeroSchool": 4912,
+      "zeroSchoolPct": 28.7,
+      "noStopKids": 5132,
+      "stopZeroKids": 1511,
+      "byTown": {
+        "八戸市": {
+          "kids": 22410,
+          "zeroKids": 6077,
+          "zeroPct": 27.1
+        },
+        "階上町": {
+          "kids": 1086,
+          "zeroKids": 566,
+          "zeroPct": 52.1
+        }
+      }
+    },
+    {
+      "date": "2026-11-10",
+      "transfers": 0,
+      "meshesWithKids": 739,
+      "zeroMeshes": 443,
+      "kids": 23496,
+      "zeroKids": 6439,
+      "zeroPct": 27.4,
+      "school": 17138,
+      "zeroSchool": 4755,
+      "zeroSchoolPct": 27.7,
+      "noStopKids": 5132,
+      "stopZeroKids": 1307,
+      "byTown": {
+        "八戸市": {
+          "kids": 22410,
+          "zeroKids": 5998,
+          "zeroPct": 26.8
+        },
+        "階上町": {
+          "kids": 1086,
+          "zeroKids": 440,
+          "zeroPct": 40.5
+        }
+      }
+    }
+  ]
+}
