@@ -214,7 +214,7 @@ async function run() {
   S.result = R;
   drawResult(R);
   const shown = [[S.home.lat, S.home.lon], ...NET.stops.filter((_, i) => R.status[i] >= 1).map((s) => [s.lat, s.lon])];
-  map.fitBounds(L.latLngBounds(shown), { padding: [30, 30], maxZoom: 15 });
+  map.fitBounds(L.latLngBounds(shown), { padding: [30, 30], maxZoom: 15, animate: false });
   $('step-result').hidden = false;
   const activeTrips = act.reduce((a, b) => a + b, 0);
   const next = activeTrips === 0 ? H.nextServiceDate(NET, P.date, 120) : null;
@@ -242,7 +242,7 @@ async function run() {
     : `<li class="hint">${pois.length ? '近くに行ける施設が見つかりませんでした。条件をゆるめてみてください。' : '施設データを取得できませんでした。地図のバス停をタップしてカードを作れます。'}</li>`;
   list.querySelectorAll('li[data-i]').forEach((li) => li.addEventListener('click', () => {
     const p = reach[+li.dataset.i];
-    map.setView([p.lat, p.lon], 15);
+    map.setView([p.lat, p.lon], 15, { animate: false });
     openCard(p.stop, p);
   }));
 }
@@ -379,7 +379,7 @@ async function loadFeeds(list, allowBundle) {
     S.result = null; S.townScore = null; POIS = null;
     S.kanaIndex = new Map(NET.stops.filter((s) => s.kana).map((s) => [s.name, s.kana]));
     drawStopsPlain();
-    if (NET.stops.length) map.fitBounds(L.latLngBounds(NET.stops.map((s) => [s.lat, s.lon])), { padding: [20, 20] });
+    if (NET.stops.length) map.fitBounds(L.latLngBounds(NET.stops.map((s) => [s.lat, s.lon])), { padding: [20, 20], animate: false });
     const saved = NET.feeds.filter((f) => f.source === 'bundle');
     $('data-status').innerHTML = `読み込み完了：${NET.feeds.map((f) => esc(f.name)).join('、')}<br>バス停 ${NET.stops.length}か所・便 ${NET.trips.length}本`
       + (saved.length ? `<br>通信できなかったため、${esc(saved[0].fetched)}に保存したデータを使っています。` : '');
@@ -476,7 +476,7 @@ async function runDemo(q) {
   if (!q.has('card')) return;
   const p = (S.reach || []).find((x) => x.name.includes(q.get('card')));
   if (!p) return;
-  map.setView([p.lat, p.lon], 15);
+  map.setView([p.lat, p.lon], 15, { animate: false });
   openCard(p.stop, p);
   if (q.has('raw')) { showRaw(); $('card-raw').scrollIntoView({ block: 'start' }); }
 }
