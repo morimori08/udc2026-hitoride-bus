@@ -1,0 +1,81 @@
+{
+  "fetched": "2026-11-01",
+  "feeds": [
+    {
+      "org": "hachinohe",
+      "feed": "hachinohe-citybus",
+      "name": "八戸市営バス",
+      "orgName": "八戸市交通部",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/deed.ja",
+      "start": "2026-04-01",
+      "end": "2027-03-31",
+      "file": "hachinohe__hachinohe-citybus.zip",
+      "fetched": "2026-11-01",
+      "bytes": 1288170,
+      "hasTranslations": true,
+      "stats": {
+        "stops": 680,
+        "trips": 2148,
+        "interpolated": 0
+      }
+    },
+    {
+      "org": "hachinohecity",
+      "feed": "hachinohe-nango",
+      "name": "八戸市南郷コミュニティバス",
+      "orgName": "八戸市",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/deed.ja",
+      "start": "2026-03-10",
+      "end": "2027-03-31",
+      "file": "hachinohecity__hachinohe-nango.zip",
+      "fetched": "2026-11-01",
+      "bytes": 296705,
+      "hasTranslations": true,
+      "stats": {
+        "stops": 171,
+        "trips": 12,
+        "interpolated": 0
+      }
+    },
+    {
+      "org": "hashikamitown",
+      "feed": "hashikamibus",
+      "name": "階上町コミュニティバス",
+      "orgName": "階上町",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.ja",
+      "start": "2026-04-01",
+      "end": "2027-03-31",
+      "file": "hashikamitown__hashikamibus.zip",
+      "fetched": "2026-11-01",
+      "bytes": 129953,
+      "hasTranslations": true,
+      "stats": {
+        "stops": 97,
+        "trips": 42,
+        "interpolated": 0
+      }
+    },
+    {
+      "org": "towadakankodentetsu",
+      "feed": "toutetsu",
+      "name": "十和田観光電鉄（一般路線）",
+      "orgName": "十和田観光電鉄株式会社",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/deed.ja",
+      "start": "2026-10-01",
+      "end": "2027-03-31",
+      "file": "towadakankodentetsu__toutetsu.zip",
+      "fetched": "2026-11-01",
+      "bytes": 619404,
+      "hasTranslations": true,
+      "stats": {
+        "stops": 935,
+        "trips": 183,
+        "interpolated": 0
+      }
+    }
+  ]
+}

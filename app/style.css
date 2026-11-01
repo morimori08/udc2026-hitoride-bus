@@ -116,3 +116,5 @@ summary { cursor: pointer; font-size: 13px; color: var(--mute); }
   #card { position: absolute; left: 0; top: 0; width: 100%; border-width: 2px; }
   .modal { background: none; }
 }
+ruby rt { font-size: 0.55em; font-weight: 400; letter-spacing: 0; }
+.card ruby rt { color: #3b4450; }
